@@ -30,6 +30,9 @@ main(int argc, char *argv[])
 	struct addrinfo hints;
 	struct addrinfo *res;
 	char buf[SOURCEPACKETSIZE];
+	struct timeval tv;
+	tv.tv_sec = 30;
+
 
 	// Parse command line args
 	if (argc != 5) {
@@ -56,6 +59,9 @@ main(int argc, char *argv[])
 		fprintf(stderr, "socket error: %s\n", strerror(errno));
 		exit(NAGIOSCRIT);
 	}
+
+	// Set the socket timeout
+	setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval));
 
 	// Open a connection to the remote server
 	if ((status = connect(s, res->ai_addr, res->ai_addrlen)) != 0) {
@@ -124,13 +130,13 @@ main(int argc, char *argv[])
 	long player_count = strtol(players3, NULL, 10);
 
 	if (player_count < warnplayers) {
-		printf("OK: %d player(s) online\n", player_count);
+		printf("OK: %ld player(s) online\n", player_count);
 		exit(NAGIOSOK);
-	} else if (player_count >= warnplayers && players < critplayers) {
-		printf("WARN: %d player(s) online\n", player_count);
+	} else if (player_count >= warnplayers && player_count < critplayers) {
+		printf("WARN: %ld player(s) online\n", player_count);
 		exit(NAGIOSWARN);
 	} else if (player_count >= critplayers) {
-		printf("CRITICAL: %d player(s) online\n", player_count);
+		printf("CRITICAL: %ld player(s) online\n", player_count);
 		exit(NAGIOSCRIT);
 	} else {
 		fprintf(stderr, "UNKNOWN: An unknown error has occured\n");
