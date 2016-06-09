@@ -130,16 +130,16 @@ main(int argc, char *argv[])
 	long player_count = strtol(players3, NULL, 10);
 
 	if (player_count < warnplayers) {
-		printf("OK: %ld player(s) online\n", player_count);
+		printf("JC2MP Player Count : %ld player(s) online : OK\n", player_count);
 		exit(NAGIOSOK);
 	} else if (player_count >= warnplayers && player_count < critplayers) {
-		printf("WARN: %ld player(s) online\n", player_count);
+		printf("JC2MP Player Count : %ld player(s) online : WARN\n", player_count);
 		exit(NAGIOSWARN);
 	} else if (player_count >= critplayers) {
-		printf("CRITICAL: %ld player(s) online\n", player_count);
+		printf("JC2MP Player Count : %ld player(s) online : CRITICAL\n", player_count);
 		exit(NAGIOSCRIT);
 	} else {
-		fprintf(stderr, "UNKNOWN: An unknown error has occured\n");
+		fprintf(stderr, "JC2MP Player Count : An unknown error has occured : UNKNOWN\n");
 		exit(NAGIOSUNKNOWN);
 	}
 
